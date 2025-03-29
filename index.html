@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spring Boot Dummy App</title>
+</head>
+<body>
+    <h1>Spring Boot Dummy App</h1>
+
+    <button onclick="getData()">GET Request</button>
+    <p id="getResponse"></p>
+
+    <input type="text" id="postMessageInput" placeholder="Enter a message">
+    <button onclick="postData()">POST Request</button>
+    <p id="postResponse"></p>
+
+    <script>
+        const base_url = "https://husky-enabling-nationally.ngrok-free.app";
+
+        function getData() {
+            fetch(`${base_url}/api/data`, {
+                method: "GET",
+                mode: "cors",
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => response.text())  // Read response as text first
+            .then(data => {
+                console.log("Raw Response:", data);  // Log the full response
+                return JSON.parse(data);  // Try to parse as JSON
+            })
+            .then(parsedData => {
+                document.getElementById("getResponse").innerText = "Response: " + parsedData.message;
+            })
+            .catch(error => console.error("Error:", error));
+        }
+
+
+        function postData() {
+            const message = document.getElementById("postMessageInput").value;
+            fetch(`${base_url}/api/data`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("postResponse").innerText = "Server Received: " + data.received;
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>
